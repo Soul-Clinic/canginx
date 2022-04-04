@@ -9,4 +9,7 @@
         #:sb-bsd-sockets
         #:sb-thread)
   (:export
+   #:*index*
+   #:+buf-size+
+   #:+buf-mini+
    #:start-server))

@@ -1,15 +1,13 @@
 (in-package #:canginx)
 
+(defparameter *index* "/index.htm")
 (defun @dispose (*client* *root* *buffer*
                        &optional (nth 1)
                        &aux (key (second-value (ignore-errors (socket-peername *client*)))))
   ($output "~%~A => ~A" nth *client*)
   
   (let* (($length (nth-value 1 (socket-receive *client* *buffer* nil)))
-         $header
-         $fields
-         $path
-         $url)
+         $header $fields $path $url)
     
     (when (zero? $length)
       ($error "Bye: ~s~%" *client*)
@@ -20,15 +18,12 @@
           $url (regex-replace "\\?.*$" (second $fields) ""))
 
     (when (string= $url "/")
-      (setf $url "/index.htm"))
-    
-    (setf $path (string+ *root* $url))
-    
-    ($output "~A~&Length: ~A~%~A ~A" $header $length $url $path)
+      (setf $url *index*))
+    (setf $path (string+ *root* $url))    
+    ($output "~A" $header)
 
     (@compile $path nth key)
     (@dispose *client* *root* *buffer* (1+ nth))))
-
 
 (defun @close ()
   (handler-case
@@ -37,7 +32,6 @@
         (socket-close *client*))
     (error (e)
       ($output "Shutdown/Close Error: ~A" e))))
-
 
 (defun start-server (&key port root
                      &aux (server (make-instance 'inet-socket :type :stream :protocol :tcp)))
@@ -55,7 +49,4 @@
           (socket-accept server)
         (push client *all-clients*)
         (make-thread '@dispose :arguments (list client root (make-array +buf-size+ :element-type +type+)))))))
-
-
-
 

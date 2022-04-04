@@ -7,9 +7,10 @@
 (defparameter *client* nil)
 (defparameter *root* nil)
 (defparameter *buffer* nil)
+(defparameter +buf-size+ (* 1024 1024) "1MB buffer")
+(defparameter +buf-mini+ (* 1024 5) "At lease 5KB to gzip compress")
+
 (defconst +type+ '(unsigned-byte 8))
-(defconst +buf-size+ (* 1024 1024) "1MB buffer")
-(defconst +buf-mini+ (* 1024 5) "At lease 5KB to gzip compress")
 
 ;;   Content-Disposition: attachment; filename=Leovinci.webp~%~
 (defparameter *server-header-format* "HTTP/1.1 200 OK~%~
