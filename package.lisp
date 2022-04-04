@@ -8,8 +8,7 @@
         #:salza2
         #:sb-bsd-sockets
         #:sb-thread)
-  (:export
-   #:*index*
-   #:+buf-size+
-   #:+buf-mini+
-   #:start-server))
+  (:export #:*index*
+           #:+buf-size+
+           #:+buf-mini+
+           #:start-server))

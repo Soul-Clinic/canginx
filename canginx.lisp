@@ -1,6 +1,7 @@
 (in-package #:canginx)
 
-(defparameter *index* "/index.htm")
+(defparameter *index* "/index.htm" "Home HTML")
+
 (defun @dispose (*client* *root* *buffer*
                        &optional (nth 1)
                        &aux (key (second-value (ignore-errors (socket-peername *client*)))))
