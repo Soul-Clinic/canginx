@@ -2,11 +2,8 @@
 
 (defparameter *index* "/index.htm" "Home HTML")
 
-(defun @dispose (*client* *root* *buffer*
-                       &optional (nth 1)
-                       &aux (key (second-value (ignore-errors (socket-peername *client*)))))
+(defun @dispose (*client* *root* *buffer* &optional (nth 1))
   ($output "~%~A => ~A" nth *client*)
-  
   (let* (($length (nth-value 1 (socket-receive *client* *buffer* nil)))
          $header $fields $path $url)
     
@@ -23,14 +20,12 @@
     (setf $path (string+ *root* $url))    
     ($output "~A" $header)
 
-    (@compile $path nth key)
+    (@compile $path nth)
     (@dispose *client* *root* *buffer* (1+ nth))))
 
 (defun @close ()
   (handler-case
-      (progn
-        (socket-shutdown *client* :direction :io)
-        (socket-close *client*))
+      (socket-close *client*) ;; (socket-shutdown *client* :direction :io)
     (error (e)
       ($output "Shutdown/Close Error: ~A" e))))
 

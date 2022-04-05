@@ -11,4 +11,5 @@
   (:export #:*index*
            #:+buf-size+
            #:+buf-mini+
+           #:*max-age*
            #:start-server))
