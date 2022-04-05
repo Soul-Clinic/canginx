@@ -1,15 +1,16 @@
 (in-package #:canginx)
 
 ;; Content-Disposition: attachment; filename=Leovinci.webp~%~	For Download File
-(defparameter *server-header-format* "HTTP/1.1 200 OK~%~
-  Access-Control-Allow-Origin: *~%~
-  Connection: keep-alive~%~
-  Content-Encoding: ~A~%~
-  Keep: ~A~%~
-  IP: ~A~%~
-  Cache-Control: max-age=~A~%~
-  Content-Type: ~A~%~
-  Content-Length: ~A~2%")
+(defparameter *server-header-format* "~
+HTTP/1.1 200 Fine
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Content-Encoding: ~A
+Keep: ~A
+IP: ~A
+Cache-Control: max-age=~A
+Content-Type: ~A
+Content-Length: ~A~2%")
 
 (defun ip (socket)
   (multiple-value-bind (vector port)
@@ -19,6 +20,17 @@
         (princ (elt vector n) sth)
         (princ (if (= n (- (length vector) 1)) "::"  ".") sth))
       (princ port sth))))
+
+(defun not-found (&optional (text "<h3>Never Found It</h3>"))
+  (fmt "~
+HTTP/1.1 404 Not Found, Guy
+Content-Type: text/html
+Content-Length: ~A
+
+~A
+" (1+ (length text)) text))
+
+
 
 (defun make-header (encoding nth port type length)
   (fmt *server-header-format* encoding nth port *max-age* type length))
@@ -39,7 +51,11 @@
                binary? t))
         (:default
          (setf type "text/html")))
-
+  (unless (probe-file path)
+    (@error "Not Found ~A" path)
+    (socket-send *client* (not-found "<i>Not Found</i>") nil)
+    (return-from @compile))
+  
   (with-open-file (in path :element-type +type+)
 
     (cond ((or binary? (< (file-length in) +buf-mini+))

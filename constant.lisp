@@ -7,7 +7,7 @@
 (defparameter *client* nil)
 (defparameter *root* nil)
 (defparameter *buffer* nil)
-(defparameter *max-age* 999999)
+(defparameter *max-age* 7758258)
 (defparameter +buf-size+ (* 1024 1024) "1MB buffer")
 (defparameter +buf-mini+ (* 1024 5) "At lease 5KB to gzip compress")
 

@@ -12,5 +12,6 @@
                #:flexi-streams)
   :components ((:file "package")
                (:file "constant")
+               (:file "log")
                (:file "compile")
                (:file "canginx")))
