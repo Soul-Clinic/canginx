@@ -6,17 +6,26 @@
   Connection: keep-alive~%~
   Content-Encoding: ~A~%~
   Keep: ~A~%~
-  Port: ~A~%~
+  IP: ~A~%~
   Cache-Control: max-age=~A~%~
   Content-Type: ~A~%~
   Content-Length: ~A~2%")
+
+(defun ip (socket)
+  (multiple-value-bind (vector port)
+      (socket-peername socket)
+    (with-output-to-string (sth)
+      (dotimes (n (length vector))
+        (princ (elt vector n) sth)
+        (princ (if (= n (- (length vector) 1)) "::"  ".") sth))
+      (princ port sth))))
 
 (defun make-header (encoding nth port type length)
   (fmt *server-header-format* encoding nth port *max-age* type length))
 
 (defun @compile (path nth
                  &aux type binary?
-                   (port (second-value (ignore-errors (socket-peername *client*)))))
+                   (port (ip *client*)))
   "Maybe cache them, clone *buffer* for each file??"
   
   (cond ((scan "js$" path)
@@ -52,4 +61,7 @@
                   (header (make-header :gzip nth port type (length data))))
              (socket-send *client* header (length header))             
              (socket-send *client* data (length data)))))))
+
+
+
 

@@ -3,7 +3,7 @@
 (defparameter *index* "/index.htm" "Home HTML")
 
 (defun @dispose (*client* *root* *buffer* &optional (nth 1))
-  ($output "~%~A => ~A" nth *client*)
+  ($output "~A => ~A" nth *client*)
   (let* (($length (nth-value 1 (socket-receive *client* *buffer* nil)))
          $header $fields $path $url)
     
